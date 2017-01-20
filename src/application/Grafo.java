@@ -87,9 +87,13 @@ private  DefaultDirectedWeightedGraph<String, DefaultWeightedEdge> grafo ;
 		return risu.toString();
 	}
 	
-	public String getcamminoBell(String start){
+	public String getcamminoBell(String start, String end){
 		BellmanFordShortestPath<String, DefaultWeightedEdge> bellman = new BellmanFordShortestPath<String, DefaultWeightedEdge>(grafo, start) ;		
 		Map<String, Double> distanze = new HashMap<>() ;	
+		
+		bellman.getPathEdgeList(end);   //il cammino so do la fine
+		
+		
 		for( String arrivo : grafo.vertexSet() ) {
 			if( ! arrivo.equals(start )) {
 				double peso = bellman.getCost(arrivo) ;			
@@ -213,6 +217,43 @@ private  DefaultDirectedWeightedGraph<String, DefaultWeightedEdge> grafo ;
 		return num;
 	}
 	
+	
+	
+	//voglio ritornare gli archi con pesi piu piccoli o uguali a 2
+	
+	public List<DefaultWeightedEdge> getArchiPesiMonire(){               //ok
+		List<DefaultWeightedEdge> archiMinori = new LinkedList<>();
+		for(DefaultWeightedEdge arco :  grafo.edgeSet()){
+			double peso = grafo.getEdgeWeight(arco);
+			if(peso <= 2){
+				archiMinori.add(arco);
+			}
+			
+		}
+		System.out.println(archiMinori);
+		return archiMinori;
+		
+	}
+	
+	
+	public List<String> getListaDiMinori(List<DefaultWeightedEdge> archiMinori){   //ok
+		List<String> lista = new LinkedList<>();
+		for(DefaultWeightedEdge arco : archiMinori){
+			String primo = grafo.getEdgeSource(arco);
+			String secondo = grafo.getEdgeTarget(arco);
+			if(!lista.contains(primo)){
+				lista.add(primo);
+			}
+			if(!lista.contains(secondo)){
+				lista.add(secondo);
+			}
+		}
+		System.out.println(lista.toString());
+		return lista;
+	}
+	
+	
+	
 	public static void main(String [] args){
 		Grafo g = new Grafo();
 		g.buildGraph();
@@ -232,6 +273,8 @@ private  DefaultDirectedWeightedGraph<String, DefaultWeightedEdge> grafo ;
 		//g.getStartEnd("a", "f");
 		//g.getBoh("a",  "f");
 		//g.getCamminoSingolaFloyd("a");
-		g.getPeso("f");
+		//g.getPeso("f");
+		List<DefaultWeightedEdge> archiMinori = g.getArchiPesiMonire();
+		g.getListaDiMinori(archiMinori);
 	}
 }
